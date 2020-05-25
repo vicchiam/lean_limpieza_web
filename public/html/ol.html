@@ -1,0 +1,153 @@
+<div id="app" class=" h-100">	
+	<div class="row vw-100 h-100">
+		<div class="col-5 border p-0">
+			<div class="h-100" id="listado">
+				<div class="border-bottom bg-light">
+					<div class="row">
+						<div class="col-3 p-1">
+							<select class="custom-select" v-model="fcentro" @change="changeCentroHandler">
+								<option value="0">Picassent</option>
+								<option value="1">Merca</option>
+								<option value="2">Teruel</option>
+							</select>
+						</div>
+						<div class="col-2"></div>
+						<div class="col-3 p-1 text-center">
+							<input type="date" class="form-control w-auto" v-model="fdate" @change="changeDateHandler"/>
+						</div>
+						<div class="col-4 text-right p-0">
+							<button class="btn btn-success" @click="addOLHandler">
+								<img src="/img/material_svg/add_white_24px.svg" />
+							</button>
+						</div>
+					</div>
+				</div>
+				<div class="border-bottom mt-1 ol" v-for="(ol, index) in ols" @click="editOLHandler(index, $event)">
+					<div class="row">
+						<div class="col-8">
+							<span class="font-weight-bold">{{ ol.conf }} {{ ol.name }}</span>
+						</div>
+						<div class="col-4 text-right">
+							{{ ol.operators.length }}
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-4">
+							<span class="">{{ dateFormat(ol.start) }}</span>
+						</div>
+						<div class="col-4 text-right">
+							<span class="">{{ dateFormat(ol.end) }}</span>
+						</div>
+						<div class="col-4"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-7 border p-2">
+			<div class="h-100" id="panel0"></div>
+			<div class="h-100 pl-3 pr-3 overflow-auto d-none" id="panel1">
+				<div class="">
+					<div class="row p-0">
+						<div class="col-9">
+							<input type="text" class="form-control" id="conf" aria-describedby="basic-addon1" readonly="true" placeholder="Configuraci&oacute;n" :value="getConfName">
+						</div>
+						<div class="col-3 p-0">
+							<button class="btn btn-primary" @click="searchConfHandler" :disabled="this.form.start!=null">Buscar</button>
+							<button class="btn btn-danger ml-2" @click="deleteConfHandler" :disabled="this.form.start!=null">Eliminar</button>
+						</div>
+					</div>
+				</div>
+				<!--Operarios-->
+				<div class="border mt-4 p-2">
+					<div class="row bg-secondary p-1 text-white">
+						<div class="col-3 pl-2 pr-2 ">
+							<h5 class="m-0 p-2">Operario</h5>
+						</div>
+						<div class="col-2">
+							<h5 class="m-0 p-2">Inicio</h5>
+						</div>
+						<div class="col-2">
+							<h5 class="m-0 p-2">Final</h5>
+						</div>
+						<div class="col-5 pr-1 text-right">
+							<button class="btn btn-success" @click="addOpeHandler" :disabled="this.form.end!=null">
+								<img src="/img/material_svg/add_white_24px.svg" />
+							</button>
+						</div>
+					</div>
+					<div class="row mt-2 p-1 border-bottom" v-for="(ope, index) in form.operators">
+						<div class="col-3 pl-2">
+							<div class="p-2">{{ (index+1) }}</div>
+						</div>
+						<div class="col-2">
+							<div class="p-2">{{ ope.start }}</div>
+						</div>
+						<div class="col-2">
+							<div class="p-2">{{ ope.end }}</div>
+						</div>
+						<div class="col-3">
+							<button class="btn btn-primary ml-2" @click="endOpeHandler(index)" :disabled="ope.start==null || ope.end!=null">Final</button>
+						</div>
+						<div class="col-2 text-right pr-0">
+							<button class="btn btn-danger ml-2"  @click="deleteOpeHandler(index)" :disabled="ope.start!=null" >Borrar</button>
+						</div>						
+					</div>
+				</div>
+				<!--Incidencias-->
+				<div class="border mt-4 p-2">
+					<div class="row p-1 text-white">
+						<div class="col-5 pl-2 pr-2 ">
+							<select class="custom-select" v-model="newInc.index">
+								<option v-for="(inc,index) in incs" :value="index">{{ inc.name }}</option>
+							</select>
+						</div>
+						<div class="col-3">
+							<input type="number" class="form-control" placeholder="Minutos" v-model="newInc.minutes"/>
+						</div>
+						<div class="col-2 pr-1 text-right">
+							<button class="btn btn-primary" @click="addIncAlmuerzoHandler" :disabled="form.start==null" >Almuerzo</button>
+						</div>
+						<div class="col-2 pr-1 text-right">
+							<button class="btn btn-success" @click="addIncHandler" :disabled="form.start==null" >
+								<img src="/img/material_svg/add_white_24px.svg" />
+							</button>
+						</div>
+					</div>
+					<div class="row bg-secondary p-1 text-white">
+						<div class="col-5 pl-2 pr-2 ">
+							<h5 class="m-0">Incidencia</h5>
+						</div>
+						<div class="col-3">
+							<h5 class="m-0">Minutos</h5>
+						</div>
+						<div class="col-4 pr-1 text-right">
+							
+						</div>
+					</div>
+					<div class="row mt-2 p-1 border-bottom" v-for="(inc, index) in form.incs">
+						<div class="col-5 pl-2">
+							<div class="p-2">{{ inc.name }}</div>
+						</div>
+						<div class="col-3">
+							<div class="p-2">{{ inc.minutes }}</div>
+						</div>
+						<div class="col-4 text-right pr-0">
+							<button class="btn btn-danger ml-2"  @click="deleteIncHandler(index)" >Borrar</button>
+						</div>						
+					</div>
+				</div>
+				<div class="mt-4">
+					<textarea class="form-control" v-model="form.obs" placeholder="Observaciones"></textarea>
+				</div>
+				<div class="mt-3 text-right">
+					<button class="btn btn-primary" @click="startHandler" :disabled="this.form.start!=null">Inicio</button>
+					<button class="btn btn-primary ml-3" @click="endHandler" :disabled="this.form.start==null || this.form.end!=null">Final</button>
+				</div>
+			</div>
+			<div class="h-100 d-none" id="panel2">
+				<chis-table ref="table1" colid="conf" :rows="confs" :cols="cols" :colsopt="colsOpt" :titlebuttons="titleButtons" :buttons="buttons" :filter="filter" :order="order" margintop="200" @chis-action-click-row="actionClikRowHandler" @chis-action-click="actionClickHandler"></chis-table>				
+			</div>			
+		</div>
+	</div>	
+</div>
+<script src="public/js/ol.js" ></script>

@@ -1,0 +1,111 @@
+<div id="app" class="">	
+	<div class="row vw-100 p-0">
+		<div class="col-5 border p-2">
+			<div class="row p-3">
+				<div class="col-8">
+					<div class="form-group mb-0">
+						<label for="usuario">Usuario:</label>
+						<select class="custom-select" id="usuario" v-model="form.usuario">
+							<option value="-1" selected>Selecciona un usuario</option>
+							<option v-for="(u,index) in usuarios" :value="index">{{ u.correo }}</option>					
+						</select>
+					</div>
+				</div>
+				<div class="col-4">
+					<div class="form-group mb-0">
+						<label for="planta">Planta:</label>
+						<select class="custom-select" id="planta" v-model="form.planta">
+							<option value="PCS">Picassent</option>
+							<option value="PCS2">Merca</option>
+							<option value="PCS3">Teruel</option>					
+						</select>
+					</div>
+				</div>
+			</div>			
+			<div class="p-3">
+				<label>Afecta a: (Elegir 1 de los 3)</label>
+				<div>
+					<div class="input-group">
+						<input type="text" class="form-control" id="maquina" aria-describedby="basic-addon1" readonly="true" placeholder="Maquina" v-model="form.maquina.nombre">
+						<div class="input-group-append">
+    						<span class="input-group-text pointer ml-2" id="basic-addon1" @click="searchHandler('maquina')" >
+    							<img class="btn-img-lt ml-2 mr-2" src="/img/material_svg/search_black_24px.svg" /> 
+    						</span>
+  						</div>
+  						<div class="input-group-append">
+    						<span class="input-group-text pointer ml-2" id="basic-addon1" @click="deleteHandler('maquina')">
+    							<img class="btn-img-lt ml-2 mr-2" src="/img/material_svg/delete_black_24px.svg"  />    							
+    						</span>
+  						</div>
+					</div>
+					<div class="input-group mt-2">
+						<input type="text" class="form-control" id="instalacion" aria-describedby="basic-addon2" readonly="true" placeholder="Instalaci&oacute;n" v-model="form.instalacion.nombre">
+						<div class="input-group-append">
+    						<span class="input-group-text pointer ml-2" id="basic-addon2" @click="searchHandler('instalacion')">
+    							<img class="btn-img-lt ml-2 mr-2" src="/img/material_svg/search_black_24px.svg" /> 
+    						</span>
+  						</div>
+  						<div class="input-group-append">
+    						<span class="input-group-text pointer ml-2" id="basic-addon2" @click="deleteHandler('instalacion')">
+    							<img class="btn-img-lt ml-2 mr-2" src="/img/material_svg/delete_black_24px.svg" />    							
+    						</span>
+  						</div>
+					</div>
+					<div class="input-group mt-2">
+						<input type="text" class="form-control" id="vehiculo" aria-describedby="basic-addon3" readonly="true" placeholder="Veh&iacute;culo" v-model="form.vehiculo.nombre">
+						<div class="input-group-append">
+    						<span class="input-group-text pointer ml-2" id="basic-addon3" @click="searchHandler('vehiculo')">
+    							<img class="btn-img-lt ml-2 mr-2" src="/img/material_svg/search_black_24px.svg" /> 
+    						</span>
+  						</div>
+  						<div class="input-group-append">
+    						<span class="input-group-text pointer ml-2" id="basic-addon3" @click="deleteHandler('vehiculo')">
+    							<img class="btn-img-lt ml-2 mr-2" src="/img/material_svg/delete_black_24px.svg" />    							
+    						</span>
+  						</div>
+					</div>
+				</div>
+			</div>
+			<div class="p-3">
+				<label>Zona:</label>
+				<div>
+					<div class="input-group">
+						<input type="text" class="form-control" id="maquina" aria-describedby="basic-addon1" readonly="true" placeholder="Zona" v-model="form.zona.nombre">
+						<div class="input-group-append">
+    						<span class="input-group-text pointer ml-2" id="basic-addon1" @click="searchHandler('zona')">
+    							<img class="btn-img ml-2 mr-2" src="/img/material_svg/search_black_24px.svg"  /> 
+    						</span>
+  						</div>
+  						<div class="input-group-append">
+    						<span class="input-group-text pointer ml-2" id="basic-addon1" @click="deleteHandler('zona')">
+    							<img class="btn-img ml-2 mr-2" src="/img/material_svg/delete_black_24px.svg"  />    							
+    						</span>
+  						</div>
+					</div>					
+				</div>
+			</div>
+			<div class="form-group p-3 mb-0">
+				<label for="usuario">Afecta:</label>
+				<select class="custom-select" id="usuario" v-model="form.afecta">
+					<option value="-1" selected>Selecciona una opci&oacute;n</option>			
+					<option v-for="a in afecta" :value="a.valor">{{ a.nombre }}</option>							
+				</select>
+			</div>
+			<div class="form-group p-3">
+				<label for="descripcion">Descripci&oacute;n de la averia</label>
+				<textarea id="descripcion" class="form-control" v-model="form.descripcion"></textarea>
+			</div>
+			<div class="p-3 text-right">
+				<button class="btn btn-secondary" @click="cleanHandler">Limpiar</button>
+				<button class="btn btn-primary" @click="saveHandler">Guardar</button>
+			</div>	
+		</div>
+		<div class="col-7 p-2 border">
+			<div class="p-3">
+				<span id="title">Listado {{ form.opcion }}</span>
+				<chis-table ref="table1" colid="codigo" :rows="rows" :cols="cols" :colsopt="colsOpt" :filter="filter" :order="order" margintop="220" @chis-action-click-row="actionClikRowHandler"></chis-table>
+			</div>
+		</div>
+	</div>	
+</div>
+<script src="public/js/om.js" ></script>
